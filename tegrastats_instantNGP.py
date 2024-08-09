@@ -3,17 +3,17 @@ import time
 import os
 import sys
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     print("Usage: python script_name.py <model_name>")
     sys.exit(1)
-
-model_name = sys.argv[1]
+dataset_name = sys.argv[1]
+model_name = sys.argv[2]
 
 # Command to start 3DGS rendering
-render_command = ["python3", "/home/jetson-agx/NeRF/gaussian-splatting/render.py", "-m", f"/home/jetson-agx/NeRF/models/{model_name}_30k", "--skip_train"]
+render_command = ["python3", "/home/jetson-agx/NeRF/instant-ngp/scripts/run.py", f"/home/jetson-agx/NeRF/datasets/{dataset_name}/{model_name}", "--load_snapshot", f"/home/jetson-agx/NeRF/models/{model_name}_30k/{model_name}_30k.ingp", "--test_transforms", f"/home/jetson-agx/NeRF/datasets/{dataset_name}/{model_name}/transforms_test.json"]
 
 # Command to start tegrastats
-tegrastats_command = ["sudo", "tegrastats", "--verbose", "--interval", "50", "--logfile", f"/home/jetson-agx/NeRF/power_measurement/3DGS_20240806/{model_name}.csv"]
+tegrastats_command = ["sudo", "tegrastats", "--verbose", "--interval", "1000", "--logfile", f"/home/jetson-agx/NeRF/power_measurement/NGP_20240806/{model_name}.csv"]
 
 # Start the 3DGS rendering process
 render_process = subprocess.Popen(render_command)
